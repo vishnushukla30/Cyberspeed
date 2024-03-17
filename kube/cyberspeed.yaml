@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cyberspeed
+spec:
+  selector:
+    app: cyberspeed
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyberspeed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cyberspeed
+  template:
+    metadata:
+      labels:
+        app: cyberspeed
+    spec:
+      containers:
+        - name: cyberspeed
+          image: learnk8s/knote-js:1.0.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongo:27017/dev
+          imagePullPolicy: Always
